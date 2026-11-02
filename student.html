@@ -121,7 +121,7 @@
   // ===== Settings: same values as in index.html =====
   const VAPI_PUBLIC_KEY = "da0bcf4e-de68-4561-91a2-b2a9af3a2049";
   const ASSISTANT_ID    = "8b9b1126-c31a-4215-a955-595c625f3c20";
-  const API_URL         = "https://script.google.com/macros/s/AKfycbwKtwYa09-cml2SGFomrb_FPHjE8Al3OeNd1y-gRCkRwTI8_2wZd3hhR8v5Jc4HA-3qlQ/exec";   // your web app link ending in /exec
+  const API_URL         = "https://script.google.com/macros/s/AKfycbztFaKa60I8CLNEeQciopaKd47kECf-cE9MpCpD35u5EeRFPIXW3St3ygUh9Xg22-EH7w/exec";   // your web app link ending in /exec
   // ===================================================
   const LIVE = API_URL.startsWith("https://");
   async function api(params) {
@@ -179,7 +179,9 @@
     $("state").textContent = "Connecting…";
     vapi.start(ASSISTANT_ID, {
       variableValues: { name: student.name, studentId: student.id, year: student.year, fee: toNum(student.fee).toLocaleString("en-PK") }
-    });
+    }).then(call => {
+      if (call && call.id && LIVE) api({ api: "register", t: token, callId: call.id }).catch(console.error);
+    }).catch(console.error);
   });
   $("endBtn").addEventListener("click", () => vapi && vapi.stop());
 
@@ -233,7 +235,8 @@
         $("lead").textContent = "Ask the Blackstone fee desk to send you a new link.";
       });
   } else {
-    showStudent({ name: "Aneeq Shahzad", id: "BSOL-2Y-001", year: "2nd Year", fee: "450000" });
+    $("greet").textContent = "This page isn't set up yet";
+    $("lead").textContent = "Please contact the Blackstone fee desk.";
   }
 </script>
 </body>
